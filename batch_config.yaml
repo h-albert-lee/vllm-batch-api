@@ -1,0 +1,22 @@
+model:
+  path: "path/to/your/model"  # path to model
+  tensor_parallel_size: 4     # available gpu count
+
+serving:
+  batch_size: 10
+  batch_interval: 5.0         # seconds
+  max_concurrent_requests: 100
+  response_role: "assistant"
+  enable_prompt_tokens_details: true
+
+metrics:
+  enable: true
+  url: "0.0.0.0"
+  port: 8001
+
+logging:
+  level: "INFO"
+  max_log_len: 1000
+
+security:
+  api_key: "your-secure-api-key"
