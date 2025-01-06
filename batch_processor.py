@@ -83,32 +83,34 @@ async def run_request(
     except Exception as e:
         logger.error(f"Error processing request {request.custom_id}: {e}")
         return make_error_request_output(request, error_msg=str(e))
-
-    if isinstance(response, (ChatCompletionResponse, EmbeddingResponse)):
-        return BatchRequestOutput(
-            id=f"vllm-{random_uuid()}",
-            custom_id=request.custom_id,
-            response=BatchResponseData(
-                body=response,
-                request_id=f"vllm-batch-{random_uuid()}",
-            ),
-            error=None,
-        )
-    elif isinstance(response, ErrorResponse):
-        return BatchRequestOutput(
-            id=f"vllm-{random_uuid()}",
-            custom_id=request.custom_id,
-            response=BatchResponseData(
-                status_code=response.code,
-                request_id=f"vllm-batch-{random_uuid()}",
-            ),
-            error=response.message if hasattr(response, "message") else "Unknown error",
-        )
     else:
-        return make_error_request_output(
-            request, error_msg="Unexpected response type from the serving engine"
-        )
+        # try 블록에서 예외가 없으면 이 else 블록이 실행됩니다.
+        if isinstance(response, (ChatCompletionResponse, EmbeddingResponse)):
+            return BatchRequestOutput(
+                id=f"vllm-{random_uuid()}",
+                custom_id=request.custom_id,
+                response=BatchResponseData(
+                    body=response,
+                    request_id=f"vllm-batch-{random_uuid()}",
+                ),
+                error=None,
+            )
+        elif isinstance(response, ErrorResponse):
+            return BatchRequestOutput(
+                id=f"vllm-{random_uuid()}",
+                custom_id=request.custom_id,
+                response=BatchResponseData(
+                    status_code=response.code,
+                    request_id=f"vllm-batch-{random_uuid()}",
+                ),
+                error=response.message if hasattr(response, "message") else "Unknown error",
+            )
+        else:
+            return make_error_request_output(
+                request, error_msg="Unexpected response type from the serving engine"
+            )
     finally:
+        # try/except/else 블록을 빠져나가기 전, 항상 실행됩니다.
         tracker.completed()
 
 
