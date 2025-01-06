@@ -16,12 +16,6 @@ class ServingConfig(BaseModel):
     enable_prompt_tokens_details: bool = Field(default=False, description="Enable detailed prompt tokens information")
 
 
-class MetricsConfig(BaseModel):
-    enable: bool = Field(default=True, description="Enable Prometheus metrics")
-    url: str = Field(default="0.0.0.0", description="Prometheus metrics server URL")
-    port: int = Field(default=8001, ge=1, le=65535, description="Prometheus metrics server port")
-
-
 class LoggingConfig(BaseModel):
     level: str = Field(default="INFO", description="Logging level")
     max_log_len: Optional[int] = Field(default=None, ge=1, description="Maximum length of logs")
@@ -34,7 +28,6 @@ class SecurityConfig(BaseModel):
 class BatchConfig(BaseModel):
     model: ModelConfig
     serving: ServingConfig
-    metrics: MetricsConfig
     logging: LoggingConfig
     security: SecurityConfig
 

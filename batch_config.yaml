@@ -1,18 +1,13 @@
 model:
-  path: "path/to/your/model"  # path to model
-  tensor_parallel_size: 4     # available gpu count
+  path: "path/to/your/model"  # 모델 파일 경로
+  tensor_parallel_size: 4     # 사용 가능한 GPU 수에 맞게 설정
 
 serving:
   batch_size: 10
-  batch_interval: 5.0         # seconds
+  batch_interval: 5.0         # 초 단위
   max_concurrent_requests: 100
   response_role: "assistant"
   enable_prompt_tokens_details: true
-
-metrics:
-  enable: true
-  url: "0.0.0.0"
-  port: 8001
 
 logging:
   level: "INFO"
